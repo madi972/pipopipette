@@ -7,7 +7,6 @@ import java.util.List;
 public class arc 
 {
 	private List<Integer> arc = new LinkedList<Integer>();
-	// commentaire de tessst 3
 
 	
 }
