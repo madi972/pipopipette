@@ -22,7 +22,7 @@ public class Graphe {
 				for(int j=0;j<2*larg-1;j++){
 					
 					//trait plein
-					if (i==0 || i==2*lon-2){ //première et dernière ligne
+					if (i==0 || i==2*lon-2){ //premiÃ¨re et derniÃ¨re ligne
 						if (j%2==0){
 							graphe+=".";
 						}else{
@@ -39,7 +39,7 @@ public class Graphe {
 					}
 					
 					//ligne a remplir (en jouant)
-					if(i!=0 && i!=2*lon-2 && i%2==0){ // pour toute ligne qui n'est pas la première
+					if(i!=0 && i!=2*lon-2 && i%2==0){ // pour toute ligne qui n'est pas la premiÃ¨re
 						if (j%2==0){
 							graphe+=".";
 						}else{
@@ -55,7 +55,7 @@ public class Graphe {
 				for(int j=0;j<2*larg-1;j++){
 					
 					//trait plein
-					if (i==0 || i==2*lon-2){ //première et dernière ligne
+					if (i==0 || i==2*lon-2){ //premiÃ¨re et derniÃ¨re ligne
 						if (j%2==0){
 							graphe+=".";
 						}else{
@@ -72,7 +72,7 @@ public class Graphe {
 					}
 					
 					//ligne a remplir (en jouant)
-					if(i!=0 && i!=2*lon-2 && i%2==0){ // pour toute ligne qui n'est pas la première
+					if(i!=0 && i!=2*lon-2 && i%2==0){ // pour toute ligne qui n'est pas la premiÃ¨re
 						if (j%2==0){
 							graphe+=".";
 						}else{
@@ -145,6 +145,7 @@ public class Graphe {
 	{
 		int res = tour;
 		char c = 'a';
+		int pos = this.parcour(p1, p2);
 		if (p1 - p2 == -1 || p1 - p2 == 1)
 		{
 			c = '-';
@@ -153,11 +154,12 @@ public class Graphe {
 		{
 			c ='|';
 		}
-		
+		graphe = graphe.substring(0,pos) + c +graphe.substring(pos+1);
 		return res;
 	}
 	
-	public static void main (String [] args){
+	public static void main (String [] args)
+	{
 		Graphe a = new Graphe(5,5,1);
 		System.out.print(a.graphe);
 		
