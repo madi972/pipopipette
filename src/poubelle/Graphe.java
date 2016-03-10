@@ -1,123 +1,110 @@
 package poubelle;
+import java.io.*;
 import java.util.*;
 
-public class Graphe 
-{
-	
+public class Graphe {
+
 	private String graphe;
 	private int longueur;
 	private int largeur;
 
-	
+
 	/**
 	 * 
 	 */
 	//1 contour,0 sans contour
-	public Graphe(int lon,int larg,int cont)
-	{
-		
+	public Graphe(int lon,int larg,int cont){
+
 		longueur = lon;
 		largeur = larg;
 		graphe = "";
 		if (cont == 1 ){
-			for(int i=0;i<2*lon-1;i++)
-			{
-				for(int j=0;j<2*larg-1;j++)
-				{
-					
+			for(int i=0;i<2*lon-1;i++){
+					//graphe+="\\n";//pour le graphe en .dot
+				for(int j=0;j<2*larg-1;j++){
+
 					//trait plein
-					if (i==0 || i==2*lon-2)
-					{ //première et dernière ligne
-						if (j%2==0)
-						{
+					if (i==0 || i==2*lon-2){ //premiï¿½re et derniï¿½re ligne
+						if (j%2==0){
 							graphe+=".";
-						}
-						else
-						{
+						}else{
 							graphe+="-";
 						}
 					}
 					//barres verticales et espaces
-					if(i%2!=0)// pour chaque ligne impaire
-					{		
-						if(j!=0 && j!=2*larg-2)
-						{
+					if(i%2!=0){		// pour chaque ligne impaire
+						if(j!=0 && j!=2*larg-2){
 							graphe+=" ";
-						}
-						else
-						{
+						}else{
 							graphe+="|";
 						}
 					}
-					
+
 					//ligne a remplir (en jouant)
-					if(i!=0 && i!=2*lon-2 && i%2==0)// pour toute ligne qui n'est pas la première
-					{ 
-						if (j%2==0)
-						{
+					if(i!=0 && i!=2*lon-2 && i%2==0){ // pour toute ligne qui n'est pas la premiï¿½re
+						if (j%2==0){
 							graphe+=".";
-						}
-						else
-						{
+						}else{
 							graphe+=" ";
 						}
 					}
 				}
-				graphe+="\n";
+				graphe+="\n"; //pour le graphe en string
 			}
-		}
-		else
-		{
+		}else{
 			//graphe sans bords
-			for(int i=0;i<2*lon-1;i++)
-			{
-				for(int j=0;j<2*larg-1;j++)
-				{
-					
+			for(int i=0;i<2*lon-1;i++){
+				graphe+="\\n";//pour le graphe en .dot
+
+				for(int j=0;j<2*larg-1;j++){
+
 					//trait plein
-					if (i==0 || i==2*lon-2)//première et dernière ligne
-					{ 
-						if (j%2==0)
-						{
+					if (i==0 || i==2*lon-2){ //premiï¿½re et derniï¿½re ligne
+						if (j%2==0){
 							graphe+=".";
-						}
-						else
-						{
+						}else{
 							graphe+=" ";
 						}
 					}
 					//barres verticales et espaces
-					if(i%2!=0)// pour chaque ligne impaire
-					{		
-						if(j!=0 || j!=2*larg-2)
-						{
+					if(i%2!=0){		// pour chaque ligne impaire
+						if(j!=0 || j!=2*larg-2){
 							graphe+=" ";
-						}
-						else
-						{
+						}else{
 							graphe+=" ";
 						}
 					}
-					
+
 					//ligne a remplir (en jouant)
-					if(i!=0 && i!=2*lon-2 && i%2==0) // pour toute ligne qui n'est pas la première
-					{ 
-						if (j%2==0)
-						{
+					if(i!=0 && i!=2*lon-2 && i%2==0){ // pour toute ligne qui n'est pas la premiï¿½re
+						if (j%2==0){
 							graphe+=".";
-						}
-						else
-						{
+						}else{
 							graphe+=" ";
 						}
 					}
 				}
-				graphe+="\n";
+				//graphe+="\n";//pour le graphe String
 			}
 		}
 	}
-	
-	
+
+	/**
+	 * 
+	 * @return String - retourne le graphe a transformer en .dot
+	 */
+	public String graphDot(int i){
+		String s = "N"+i+" [label=\"N"+i+":V=7";
+		String res=graphe;
+		res=res.replaceAll("\\n", "\\\\n");
+		s+=res;
+		s+="\"]";
+		return s;
+	}
+
+
+
+
 	/**
 	 * parcour le graphe
 	 * @param p1 un des 2 point jouer
@@ -163,7 +150,7 @@ public class Graphe
 		}
 		return compt2;
 	}
-	
+
 	/**
 	 * verifie si le coup est possible
 	 * @param p1 un des 2 point jouer
@@ -184,13 +171,13 @@ public class Graphe
 		{
 			res = false;
 		}
-		
+
 		return res;
 	}
-	
+
 	/**
 	 * change un charactere lorsque l'on joue
-	 * @param p1 un des 2 point jouer
+	 * @param p1 un des 2 point jouÃ©
 	 * @param p2 l'autre
 	 * @param tour tour du joueur qui agit
 	 * @return le tour du joueur si il a changer ou non (marquer un point ou non)
@@ -213,11 +200,38 @@ public class Graphe
 		graphe = graphe.substring(0,pos) + c +graphe.substring(pos+1); // insere le charactere a la place voulu
 		return res;
 	}
-	
+
+	/**
+	 * transformer le graphe en .dot
+	 */
+	void toDot(){
+		try{
+			FileWriter fw = new FileWriter("graphe des configurations.dot");
+			PrintWriter p = new PrintWriter (fw);
+			int i=0;
+			p.println("digraph default {\n" +
+					"graph[labelloc=\"t\"  fontsize=16 fontcolor=\"blue\"\n" +
+					"label=\"Graphe des configurations d'un jeu de pipopipette\\n et calcul d'une stratÃ©gie gagnante\\n\\n\"]\n\n"+
+					"node [shape=box fontname = \"Courier New\" color=\"sienna\"]\n"+
+					"edge [fontname = \"Times\" fontcolor=\"sienna\"]\n\n"+graphDot(i)+"\n}");
+			fw.close();
+		}catch(IOException e){
+			System.out.println(e);
+		}
+	}
+
+	static Scanner sc = new Scanner (System.in);
+
+
 	public static void main (String [] args){
 		Graphe a = new Graphe(4,4,1);
+	
 		System.out.print(a.graphe);
-		a.coup(1, 5, 1);
-		System.out.print(a.graphe);
+		a.toDot();
+		/*System.out.println(a.graphDot());
+		a.coup(1, 5, 1);*/
+		//System.out.print(a.graphe.length());
+		
 	}
+
 }
